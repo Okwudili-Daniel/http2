@@ -1,4 +1,10 @@
 import http, { IncomingMessage, ServerResponse } from "http"
+import event from "events"
+
+const port: number = 2000
+
+
+
 
 interface iData {
     id: number
@@ -8,12 +14,11 @@ interface iData {
 }
 interface iMessage {
     message: string
-    successs: boolean
+    success: boolean
     data: null | object | {}[]
 }
 
 
-const port = 3000
 
 const set08: iData[] = [
     {
@@ -23,19 +28,19 @@ const set08: iData[] = [
         stack: "Full-Stack"
     },
     {
-        id: 1,
+        id: 2,
         name: "joan",
         phone: 803552825,
         stack: "Full-Stack"
     },
     {
-        id: 1,
+        id: 3,
         name: "joan",
         phone: 803552825,
         stack: "Full-Stack"
     },
     {
-        id: 1,
+        id: 4,
         name: "joan",
         phone: 803552825,
         stack: "Full-Stack"
@@ -43,7 +48,7 @@ const set08: iData[] = [
 ]
 
 const Server = http.createServer((req: IncomingMessage, res: ServerResponse<IncomingMessage>) =>{
-   res.setHeader("Content-Type", "Application/Json")
+   res.setHeader("Content-Type", "application/json")
     
    const {method, url} = req
 
@@ -51,7 +56,7 @@ const Server = http.createServer((req: IncomingMessage, res: ServerResponse<Inco
 
    let response: iMessage = {
     message: "failed",
-    successs: false,
+    success: false,
     data: null
    }
 
@@ -64,7 +69,7 @@ const Server = http.createServer((req: IncomingMessage, res: ServerResponse<Inco
     if (url === "/" && method === "GET"){
         status = 200;
         response.message = "All set08 data gotten";
-        response.successs = true;
+        response.success = true;
         response.data = set08;
         res.write(JSON.stringify({
             response, status
@@ -77,7 +82,12 @@ const Server = http.createServer((req: IncomingMessage, res: ServerResponse<Inco
         status = 201;
         const body = JSON.parse(container);
         set08.push(body);
-        response.message = ""
+        response.message = "Successfully added";
+        response.success = true
+        response.data = set08;
+        res.write(JSON.stringify({response, status}))
+
+        res.end()
     }
    })
 })
